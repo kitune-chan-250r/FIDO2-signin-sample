@@ -1,0 +1,50 @@
+services:
+  # web-client
+  client:
+    build:
+     context: ./client/.devcontainer
+     dockerfile: Dockerfile
+    tty: true # コンテナが勝手に終了しないようにする
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client/web-client:/workspace
+    # networks:
+    #   - container-network
+  # backend-server
+  server:
+    build:
+      context: ./server/.devcontainer
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+       - 8080:8080
+    volumes:
+      - ./server/app:/workspace
+    # networks:
+    #   - container-network
+    #  environment:
+    #     - DEBUG=true
+    depends_on: # 依存関係を設定
+     - mongo-db
+  # nosql-dtabase
+  mongo-db:
+    image: mongo
+    tty: true
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: fido-db
+    command: 
+      - '--logpath'
+      - '/var/log/mongodb/mongod.log'
+    ports:
+      - 27017:27017
+    # networks:
+    #   - container-network
+  # database
+
+  # networks: # コンテナ間で通信するためのネットワークを定義
+  #   container-network:
+  #     driver: bridge
