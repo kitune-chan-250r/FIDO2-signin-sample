@@ -9,7 +9,7 @@ import lombok.Data;
  * 認証チャレンジテーブル
  */
 @Data
-public class Fido2Authenticators {
+public class FidoAuthenticator {
   @Id
   String primaryKey;
   Date expireDate;
